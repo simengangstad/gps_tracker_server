@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Flask Leaflet Website</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+        integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+        crossorigin="" />
+
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+        integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+        crossorigin=""></script>
+
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script>
+
+        var map = L.map('map').fitWorld();
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            noWrap: true,
+            bounds: [
+                [-90, -180],
+                [90, 180]
+            ],
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+
+        }).addTo(map);
+
+        map.setZoom(2.5);
+
+        var index = 0;
+
+        setInterval(
+            function update() {
+
+                var data = $.get("/data", data = { "index": index });
+
+                data.done(function (data) {
+
+                    try {
+                        const markers = JSON.parse(data);
+
+                        index += markers.length;
+
+                        for (var i = 0; i < markers.length; i++) {
+                            console.log("Adding marker at %f, %f for time %s", markers[i].lat, markers[i].lon, markers[i].time);
+                            L.marker([markers[i].lat, markers[i].lon]).addTo(map).bindPopup(`${markers[i].index}: ${markers[i].time}`)
+                        }
+                    }
+                    catch (err) {
+                        if (data != "No new entries") {
+                            console.log("Failed to parse marker data: %s", data);
+                        }
+                    }
+                });
+
+            }, 2000);
+
+    </script>
+</body>
+
+</html>
