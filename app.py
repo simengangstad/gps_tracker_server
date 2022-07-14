@@ -1,19 +1,17 @@
 from flask import Flask, render_template, request, jsonify
-import time
-from datetime import datetime
 import json
+from os import path, stat
 
-app = Flask(__name__)
+DATAFILE = "data.json"
 
 markers = []
+
+app = Flask(__name__)
 
 
 @app.route("/data", methods=["POST", "GET"])
 def data():
     if request.method == "POST":
-
-        print(str(request.data))
-
         json_data = jsonify(str(request.data))
 
         if "lat" in json_data and "lon" in json_data and "time" in json_data:
@@ -23,6 +21,9 @@ def data():
                 "time": json_data["time"],
                 "index": len(markers)
             })
+
+            with open("data.json", "w") as file:
+                json.dump(markers, file)
 
         else:
             return "Invalid data sent"
@@ -53,4 +54,13 @@ def root():
 
 
 if __name__ == "__main__":
+
+    if not path.isfile(DATAFILE):
+        # Create the file
+        open(DATAFILE, "x")
+
+    with open("data.json", "r") as file:
+        if stat(DATAFILE).st_size != 0:
+            markers = json.load(file)
+
     app.run(host="0.0.0.0", port=8080, debug=True)
