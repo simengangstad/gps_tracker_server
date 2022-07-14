@@ -11,12 +11,12 @@ markers = []
 @app.route("/data", methods=["POST", "GET"])
 def data():
     if request.method == "POST":
-        if "lat" in request.form and "lon" in request.form:
+        if "lat" in request.form and "lon" in request.form and "time" in request.form:
             markers.append({
                 "lat": request.form["lat"],
                 "lon": request.form["lon"],
-                "time": str(datetime.fromtimestamp(time.time())),
-                "index": len(markers) 
+                "time": request.form["time"],
+                "index": len(markers)
             })
 
         else:
