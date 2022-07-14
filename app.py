@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import time
 from datetime import datetime
 import json
@@ -11,11 +11,16 @@ markers = []
 @app.route("/data", methods=["POST", "GET"])
 def data():
     if request.method == "POST":
-        if "lat" in request.form and "lon" in request.form and "time" in request.form:
+
+        print(str(request.data))
+
+        json_data = jsonify(str(request.data))
+
+        if "lat" in json_data and "lon" in json_data and "time" in json_data:
             markers.append({
-                "lat": request.form["lat"],
-                "lon": request.form["lon"],
-                "time": request.form["time"],
+                "lat": json_data["lat"],
+                "lon": json_data["lon"],
+                "time": json_data["time"],
                 "index": len(markers)
             })
 
@@ -48,4 +53,4 @@ def root():
 
 
 if __name__ == "__main__":
-    app.run(host="localhost", port=8080, debug=True)
+    app.run(host="0.0.0.0", port=8080, debug=True)
