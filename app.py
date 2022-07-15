@@ -12,7 +12,12 @@ app = Flask(__name__)
 @app.route("/data", methods=["POST", "GET"])
 def data():
     if request.method == "POST":
-        json_data = jsonify(str(request.data))
+        json_data = {}
+
+        try:
+            json_data = json.loads(request.data.decode("utf8"))
+        except:
+            return "Error decoding JSON"
 
         if "lat" in json_data and "lon" in json_data and "time" in json_data:
             markers.append({
@@ -24,7 +29,6 @@ def data():
 
             with open("data.json", "w") as file:
                 json.dump(markers, file)
-
         else:
             return "Invalid data sent"
     elif request.method == "GET":
