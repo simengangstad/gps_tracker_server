@@ -113,7 +113,8 @@
 						let element = document.createElement("button")
 						element.className = "w3-bar-item w3-button";
 						element.id = "entry";
-						element.textContent = `${marker.lat}N, ${marker.lon}E\n${date.toLocaleString()}`
+						element.textContent = `${marker.lat}N, ${marker.lon}E\r\n`
+						element.textContent += `${date.toLocaleString()}`
 						element.style = "font-size: 14px;";
 						element.marker_index = marker.index;
 						element.addEventListener("click", zoomToPosition)
