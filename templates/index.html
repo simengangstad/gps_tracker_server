@@ -114,6 +114,10 @@
 						element.addEventListener("click", zoomToPosition)
 
 						document.getElementById("marker-list").prepend(element);
+
+						if (i == new_markers.length - 1) {
+							map.flyTo(new L.latLng(marker.lat, marker.lon), 15);
+						}
 					}
 				}
 				catch (err) {
