@@ -26,13 +26,15 @@
 		<h3>AVR-IoT Cellular GPS Demo</h3>
 	</div>
 
-	<button id="sidebar-button" class="button" onclick="toggle()">
-		<h4>☰</h4>
-	</button>
+	<div id="button-container">
+		<button id="last-position-button" class="button" onclick="goToLastPosition()">
+			<h4>Last position</h4>
+		</button>
 
-	<button id="last-position-button" class="button" onclick="goToLastPosition()">
-		<h4>Last position</h4>
-	</button>
+		<button id="sidebar-button" class="button" onclick="toggle()">
+			<h4>☰</h4>
+		</button>
+	</div>
 
 	<div id="sidebar-container" class="w3-sidebar w3-bar-block w3-card">
 		<div id="sidebar-content" class="w3-sidebar w3-bar-block w3-card">
