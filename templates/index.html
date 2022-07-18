@@ -23,16 +23,20 @@
 <body>
 
 	<div id="topbar" class="topnav">
-		<h4>AVR-IoT Cellular Mini GPS Demo</h4>
+		<h3>AVR-IoT Cellular GPS Demo</h3>
 	</div>
 
 	<button id="sidebar-button" class="button" onclick="toggle()">
 		<h4>☰</h4>
 	</button>
 
+	<button id="last-position-button" class="button" onclick="goToLastPosition()">
+		<h4>Last position</h4>
+	</button>
+
 	<div id="sidebar-container" class="w3-sidebar w3-bar-block w3-card">
-		<div id="sidebar" class="w3-sidebar w3-bar-block w3-card">
-			<div id="marker_list"></div>
+		<div id="sidebar-content" class="w3-sidebar w3-bar-block w3-card">
+			<div id="marker-list"></div>
 		</div>
 	</div>
 
@@ -40,6 +44,11 @@
 
 	<script>
 		var map = L.map('map').fitWorld();
+
+		var sidebar_open = false;
+
+		var index = 0;
+		var markers = []
 
 		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			maxZoom: 19,
@@ -49,25 +58,30 @@
 
 		map.setZoom(2.5);
 
-		var sidebar_open = false;
-
 		function toggle() {
+			const element = document.getElementById("sidebar-container");
+
 			if (!sidebar_open) {
-				document.getElementById("sidebar-container").style.display = "flex";
+				element.classList.remove("sidebar-container-out");
+				element.classList.add("sidebar-container-in");
 			}
 			else {
-				document.getElementById("sidebar-container").style.display = "none";
+				element.classList.remove("sidebar-container-in");
+				element.classList.add("sidebar-container-out");
 			}
 
 			sidebar_open = !sidebar_open;
 		}
 
-		function zoomToPosition(event) {
-			console.log(event);
+		function goToLastPosition() {
+			const marker = markers[markers.length - 1];
+			map.flyTo(new L.latLng(marker.lat, marker.lon), 15);
 		}
 
-		var index = 0;
-		var markers = []
+		function zoomToPosition(event) {
+			const marker = markers[event.target.marker_index];
+			map.flyTo(new L.latLng(marker.lat, marker.lon), 15);
+		}
 
 		function update() {
 
@@ -92,12 +106,12 @@
 						let element = document.createElement("button")
 						element.className = "w3-bar-item w3-button";
 						element.id = "entry";
-						element.text = `${marker.lat}N, ${marker.lon}E\n${marker.time}`
+						element.textContent = `${marker.lat}N, ${marker.lon}E\n${marker.time}`
 						element.style = "font-size: 15px;";
 						element.marker_index = marker.index;
-						element.onclick = "zoomToPosition();";
+						element.addEventListener("click", zoomToPosition)
 
-						document.getElementById("marker_list").prepend(element);
+						document.getElementById("marker-list").prepend(element);
 					}
 				}
 				catch (err) {
