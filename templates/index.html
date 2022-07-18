@@ -107,19 +107,8 @@
 
 						const matches = marker.time.match(/(\d+)\/(\d+)\/(\d+)\s+(\d+):(\d+):(\d+)/);
 
-						for (var i = 1; i < markers.length; i++) {
-							// Skip the year
-							if (i == 3) {
-								continue;
-							}
-
-							if (+matches[i] < 10) {
-								matches[i] = `0${+matches[i]}`;
-							}
-						}
-
 						// Date is given in UTC+0, so we let JS handle the timezone
-						const date = new Date(`${+matches[3]}-${+matches[2]}-${+matches[1]} ${+matches[4]}:${+matches[5]}:${+matches[6]}+00:00`);
+						const date = new Date(`${+matches[3]}/${+matches[2]}/${+matches[1]} ${+matches[4]}:${+matches[5]}:${+matches[6]}+00:00`);
 
 						let element = document.createElement("button")
 						element.className = "w3-bar-item w3-button";
