@@ -99,16 +99,14 @@
 					for (var i = 0; i < new_markers.length; i++) {
 
 						const marker = new_markers[i];
-
-						console.log("Adding marker at %f, %f for time %s", marker.lat, marker.lon, marker.time);
-
-						markers.push(marker);
-						L.marker([marker.lat, marker.lon]).addTo(map).bindPopup(`${marker.index}: ${marker.time}`)
-
 						const matches = marker.time.match(/(\d+)\/(\d+)\/(\d+)\s+(\d+):(\d+):(\d+)/);
 
 						// Date is given in UTC+0, so we let JS handle the timezone
 						const date = new Date(`${+matches[3]}/${+matches[2]}/${+matches[1]} ${+matches[4]}:${+matches[5]}:${+matches[6]}+00:00`);
+
+						console.log("Adding marker at %f, %f for time %s", marker.lat, marker.lon, date.toLocaleString());
+						markers.push(marker);
+						L.marker([marker.lat, marker.lon]).addTo(map).bindPopup(`${marker.index}: ${date.toLocaleString()}`)
 
 						let element = document.createElement("button")
 						element.className = "w3-bar-item w3-button";
